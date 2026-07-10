@@ -401,6 +401,7 @@ def test_upgrade_prints_templates_on_legacy_windows_encoding(project: Path) -> N
     result = run(
         [sys.executable, str(REPO / "scripts" / "upgrade_knowledge_system.py"), str(project)],
         env=env,
+        encoding="cp1252",
     )
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Upgrade complete: 1.3.0 -> 1.4.0" in result.stdout
