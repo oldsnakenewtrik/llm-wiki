@@ -1,91 +1,81 @@
 ---
 name: knowledge-system-bootstrap
-description: Bootstrap a compile-first project knowledge system with repo-local wiki, raw manifests, provenance tracking, auto-update checks, and platform configs for Claude Code / Codex / Cursor / Windsurf. Use when a user wants durable project context, wiki-first rules, or to replicate this model into another repo.
+description: Bootstrap or migrate a repository to a compile-first Markdown knowledge system with durable project context, raw-source manifests, provenance and staleness checks, CI validation, and configuration for Claude Code, Codex, Cursor, and Windsurf. Use when a user wants repo-local project memory, wiki-first agent rules, repeatable raw-document intake, or this knowledge workflow replicated into another repository. Do not use for throwaway projects or when the user only wants a conventional documentation page.
 ---
 
 # Knowledge System Bootstrap
 
-Use this when the user wants a project to stop relying on chat memory and start behaving like a sane system.
-
-## What this skill does
-
-Scaffolds a complete wiki-first knowledge system (30 files):
-
-- `docs/wiki/` — 8 wiki pages with YAML frontmatter (title, source, created, tags, status, optional provenance fields)
-- `manifests/raw_sources.csv` — raw file index (never raw files themselves)
-- `scripts/` — 11 validation and utility scripts:
-  - `wiki_check.py` — structure + broken links + frontmatter enforcement
-  - `ingest_raw.py` — scan a local raw root, dedupe, update manifest, and build a low-cost intake report with table-level diff summaries
-  - `raw_manifest_check.py` — manifest integrity
-  - `untracked_raw_check.py` — finds orphan PDFs/Excel/images not in manifest
-  - `provenance_check.py` — content hash freshness (source_hash in frontmatter) with strict unresolved-source failures
-  - `stale_report.py` — report wiki pages that are stale, missing hashes, unresolved, or blocked by manifest status
-  - `delta_compile.py` — generate manual draft stubs for stale/new raw instead of auto-overwriting wiki content
-  - `version_check.py` — auto-checks GitHub for new LLM-wiki releases
-  - `upgrade.sh` — one-command upgrade (scripts only, never touches wiki content)
-  - `init_raw_root.py` — create local raw directory structure
-  - `export_memory_repo.py` — export wiki to separate memory repo
-- Platform configs: `AGENTS.md`, `CLAUDE.md`, `.cursorrules`, `.windsurfrules`
-- `.claude/commands/` — Claude Code slash commands: `/wiki-check`, `/wiki-upgrade`, `/wiki-status`
-- `.github/workflows/wiki-lint.yml` — CI smoke test
-
-## Default stance
-
-- `compile-first`
-- `writeback` is mandatory
-- medium-sized projects use `wiki` before heavy `RAG`
-- Obsidian is optional, markdown is not
-- `Idea / Intent` outranks `Code`
-- full audit = disaster recovery, not normal ops
-
-## When to use it
-
-- set up a durable project memory layer
-- stop losing context between sessions
-- separate GitHub knowledge from raw binary junk
-- create a repeatable wiki/raw/manifests structure for a new repo
-- migrate an existing repo toward this model
-
-Do not use it for tiny throwaway demos.
+Create a small, inspectable knowledge layer that survives agent sessions. Keep raw source files
+local, compile reviewed conclusions into Markdown, and treat code as an implementation of the
+documented intent.
 
 ## Workflow
 
-1. Identify the target repo root and project name.
-2. Preview: `python3 scripts/bootstrap_knowledge_system.py /path/to/repo "Name" --dry-run`
-3. Run: `python3 scripts/bootstrap_knowledge_system.py /path/to/repo "Project Name"`
-4. Initialize local raw root: `python3 scripts/init_raw_root.py`
-5. Intake raw if needed: `python3 scripts/ingest_raw.py`
-6. Validate: `python3 scripts/wiki_check.py && python3 scripts/raw_manifest_check.py && python3 scripts/stale_report.py`
-7. If stale/new raw exists, scaffold manual recompilation drafts: `python3 scripts/delta_compile.py --write-drafts`
+1. Identify the target repository and a human-readable project name.
+2. Inspect existing `AGENTS.md`, `CLAUDE.md`, wiki, manifest, and documentation files. Preserve
+   user customizations.
+3. Preview the scaffold:
 
-## Existing repo migration
+   ```bash
+   python scripts/bootstrap_knowledge_system.py /path/to/repo "Project Name" --dry-run
+   ```
 
-If the repo already has docs or a CLAUDE.md:
+4. Run the same command without `--dry-run`. Existing files are skipped. Use `--force` only when
+   the user explicitly wants generated files replaced; backups are created by default.
+5. If raw documents are in scope, initialize and ingest them:
 
-- Run bootstrap with default settings (skips existing files)
-- Move existing docs into `docs/wiki/` manually
-- Register raw files in `manifests/raw_sources.csv`
-- Merge customized config rules with generated templates
+   ```bash
+   python scripts/init_raw_root.py
+   python scripts/ingest_raw.py
+   ```
 
-## Upgrade
+6. Validate the result:
 
-Existing bootstrapped projects can upgrade in place:
+   ```bash
+   python scripts/wiki_check.py
+   python scripts/raw_manifest_check.py
+   python scripts/wiki_size_report.py
+   ```
 
-```bash
-bash scripts/upgrade.sh
-```
+7. Run `stale_report.py` when raw sources exist. Use
+   `delta_compile.py --write-drafts` to create reviewable recompilation drafts; never silently
+   replace trusted wiki content.
+8. Merge generated agent rules with existing rules when bootstrap skipped customized config
+   files.
 
-If the project predates `scripts/upgrade.sh`, use the public repo wrapper once:
+## Generated system
 
-```bash
-git clone https://github.com/Ss1024sS/LLM-wiki.git
-cd LLM-wiki
-bash scripts/upgrade.sh /path/to/your-project
-```
+The renderer creates 33 files:
 
-Updates validation scripts and CI only. Wiki content and customized configs are never touched.
+- eight pages under `docs/wiki/`, including schema and runtime guidance;
+- `manifests/raw_sources.csv` and its schema metadata;
+- deterministic Python tools for validation, intake, provenance, staleness, delta drafts, size
+  reporting, raw-root setup, and memory export;
+- platform instructions for Claude Code, Codex, Cursor, and Windsurf;
+- three Claude commands, an upgrade helper, and a CI workflow.
+
+Keep PDFs, spreadsheets, screenshots, archives, customer attachments, and other raw files out of
+Git unless the user has deliberately approved publishing them. The manifest may be versioned;
+review compiled wiki content for secrets and private information before committing it.
+
+## Migration and maintenance
+
+- Move existing durable project documentation into `docs/wiki/` deliberately; do not bulk-move
+  files without understanding their role.
+- Register local raw files through `ingest_raw.py` instead of hand-authoring large manifest
+  batches.
+- Prefer direct wiki reads while they remain effective. Treat `wiki_size_report.py` thresholds as
+  heuristics and add search or RAG only when project measurements justify it.
+- Upgrade generated scripts from a continuation-repository clone with:
+
+  ```bash
+  python scripts/upgrade_knowledge_system.py /path/to/bootstrapped-project
+  ```
+
+  The upgrader must not replace wiki content, manifests, or customized platform instructions.
 
 ## Bundled resources
 
-- Script: `scripts/bootstrap_knowledge_system.py`
-- Reference: `references/playbook.md` (points to `docs/knowledge-system-playbook.md`)
+- Run `scripts/bootstrap_knowledge_system.py` to render the scaffold.
+- Read `references/playbook.md` only when the user needs the rationale, provenance model, or
+  Git/raw split explained in depth.

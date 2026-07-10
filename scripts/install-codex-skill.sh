@@ -3,7 +3,7 @@ set -euo pipefail
 
 INSTALLER="${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-installer/scripts/install-skill-from-github.py"
 DEST_DIR="${CODEX_HOME:-$HOME/.codex}/skills/knowledge-system-bootstrap"
-SKILL_URL="https://github.com/Ss1024sS/LLM-wiki/tree/main/skills/knowledge-system-bootstrap"
+SKILL_URL="https://github.com/oldsnakenewtrik/llm-wiki/tree/main/skills/knowledge-system-bootstrap"
 
 if [[ ! -f "$INSTALLER" ]]; then
   echo "Codex skill-installer not found: $INSTALLER" >&2

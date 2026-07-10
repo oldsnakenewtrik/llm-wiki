@@ -14,6 +14,7 @@ What gets UPDATED (safe to overwrite):
   - scripts/provenance_check.py
   - scripts/stale_report.py
   - scripts/delta_compile.py
+  - scripts/wiki_size_report.py
   - scripts/version_check.py
   - scripts/upgrade.sh
   - scripts/init_raw_root.py
@@ -37,8 +38,18 @@ import sys
 import tempfile
 from pathlib import Path
 
-REPO_URL = os.environ.get("LLM_WIKI_REPO_URL", "https://github.com/Ss1024sS/LLM-wiki.git")
+REPO_URL = os.environ.get("LLM_WIKI_REPO_URL", "https://github.com/oldsnakenewtrik/llm-wiki.git")
 VERSION_RE = re.compile(r"# llm-wiki-version:\s*(\S+)")
+
+
+def print_console_text(value: str) -> None:
+    """Print arbitrary template text even on legacy Windows code pages."""
+    try:
+        print(value)
+    except UnicodeEncodeError:
+        encoding = sys.stdout.encoding or "ascii"
+        escaped = value.encode(encoding, errors="backslashreplace").decode(encoding)
+        print(escaped)
 
 
 def detect_local_version(project: Path) -> str:
@@ -119,6 +130,7 @@ def main() -> int:
             "scripts/provenance_check.py",
             "scripts/stale_report.py",
             "scripts/delta_compile.py",
+            "scripts/wiki_size_report.py",
             "scripts/init_raw_root.py",
             "scripts/export_memory_repo.py",
             "scripts/version_check.py",
@@ -156,12 +168,11 @@ def main() -> int:
                 print(f"  ~ {f}")
             print("\nThese are NOT auto-updated (you may have customized them).")
             print("Review the latest templates and merge manually if needed:")
-            print(f"  Latest templates: {temp_project}")
-            # Actually let's print the new template content for easy copy
+            print("The latest template contents follow for manual review.")
             for f in diffs:
                 src = temp_project / f
                 print(f"\n--- NEW {f} ---")
-                print(src.read_text(encoding="utf-8"))
+                print_console_text(src.read_text(encoding="utf-8"))
                 print(f"--- END {f} ---")
         else:
             print("\nConfig templates: no changes.")

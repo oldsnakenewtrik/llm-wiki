@@ -1,5 +1,5 @@
 from __future__ import annotations
-# llm-wiki-version: 1.3.0
+# llm-wiki-version: 1.4.0
 # runtime: dev-only (needs PROJECT_RAW_ROOT)
 
 import argparse

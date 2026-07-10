@@ -2,7 +2,7 @@
 
 > Send this URL to any AI coding assistant. It will know what to do.
 >
-> https://github.com/Ss1024sS/LLM-wiki
+> https://github.com/oldsnakenewtrik/llm-wiki
 
 ---
 
@@ -37,7 +37,7 @@ Every session: read wiki -> do work -> write back to wiki. Knowledge compounds. 
 
 1. **Compile-first** — Don't just answer questions. Compile raw docs into wiki pages.
 2. **Writeback is mandatory** — Every conclusion, decision, or discovery goes back into the wiki. No exceptions.
-3. **Wiki before RAG** — Under ~100 documents, direct LLM reading beats vector search. Less infra, better results.
+3. **Wiki before RAG** — Start with direct Markdown reads. Add retrieval when measured size and usage justify the extra infrastructure.
 4. **Obsidian is replaceable, the paradigm is not** — The real engine is LLM + filesystem + markdown. Tools come and go.
 5. **Ideas outrank Code** — Your wiki (decisions, formulas, constraints) is more valuable than the code it generates.
 
@@ -249,7 +249,7 @@ An Obsidian plugin locks your knowledge into one tool. If the plugin dies, your 
 
 **Q: Why not RAG / vector search?**
 
-Under ~100 documents, LLMs reading files directly outperforms vector retrieval. Less infra, fewer hallucinations, easier debugging. When your wiki grows past that, RAG becomes worth it. Start simple.
+For a small or medium wiki, direct file reads are often simpler to inspect and maintain than a retrieval stack. Use `scripts/wiki_size_report.py` and real task results to decide when search or RAG becomes worthwhile; its thresholds are heuristics, not a benchmark guarantee.
 
 **Q: How does this handle stale knowledge?**
 
@@ -286,7 +286,7 @@ Structural checks (broken links, missing files, untracked raw) use Python script
 
 **Q: Does this run automatically or do I need to tell the AI each time?**
 
-Fully automatic. The session protocol is written into your AI's config file (CLAUDE.md, AGENTS.md, .cursorrules, .windsurfrules). The AI reads it at session start and follows it without being asked. You install once, it works forever.
+The protocol is written into your AI's config file (`CLAUDE.md`, `AGENTS.md`, `.cursorrules`, or `.windsurfrules`). Whether it runs automatically depends on the agent and how that product loads repository instructions. Verify the first few sessions instead of assuming writeback happened.
 
 ---
 

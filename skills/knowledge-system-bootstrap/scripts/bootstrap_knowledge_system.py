@@ -19,7 +19,7 @@ import shutil
 from datetime import date, datetime
 from pathlib import Path
 
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 
 SKILL_ROOT = Path(__file__).resolve().parents[1]
 TEMPLATES = SKILL_ROOT / "templates"

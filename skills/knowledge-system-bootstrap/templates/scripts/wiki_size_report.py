@@ -5,8 +5,8 @@ the threshold quantitative: it counts pages, characters, and a rough token
 estimate (chars/4 — conservative for English+CJK mix), then prints buckets.
 
 Buckets (single-session full-read budget):
-  GREEN  < 30k tokens   — read everything every session, no problem
-  YELLOW 30k–80k        — start being selective; read index + status + log
+  GREEN  < 30k tokens   — direct Markdown reads remain practical
+  YELLOW 30k–80k        — tighten page selection and navigation
                           and only pull other pages as needed
   RED    80k–200k       — wiki-first still works but design for partial reads;
                           consider per-domain sub-indices
@@ -19,7 +19,7 @@ much more, but session-start full-reads waste cache and money long before
 the hard context limit.
 """
 from __future__ import annotations
-# llm-wiki-version: 1.3.0
+# llm-wiki-version: 1.4.0
 # runtime: ci-safe (reads wiki only)
 
 import argparse
@@ -45,7 +45,7 @@ def estimate_tokens(text: str) -> int:
 
 def bucket(total_tokens: int) -> tuple[str, str]:
     if total_tokens < GREEN:
-        return "GREEN", "Read the whole wiki every session — no concern."
+        return "GREEN", "Direct Markdown reads remain practical. Start with index + status + log, then open relevant pages."
     if total_tokens < YELLOW:
         return "YELLOW", "Start being selective: index + status + log on session start, pull other pages on demand."
     if total_tokens < RED:

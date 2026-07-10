@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.4.0 (2026-07-10)
+
+Community continuation release based on the recovered final upstream commit.
+
+- Preserve all 40 original commits, the MIT notice, and original author attribution.
+- Fix the root bootstrap wrapper on Windows when repository or interpreter paths contain spaces,
+  and make upgrade template previews safe on legacy Windows console encodings.
+- Restore installer, upgrade, release-check, security, and documentation links under the new
+  maintainer repository.
+- Add cross-platform pytest coverage on Linux, macOS, and Windows.
+- Refresh the Codex skill instructions and UI metadata using current skill conventions.
+- Document the recovery chain and distinguish continuation changes from upstream history.
+- Rephrase RAG thresholds and automatic-agent behavior as heuristics that users should verify.
+
+See [release-notes-v1.4.0.md](./docs/release-notes-v1.4.0.md).
+
 ## v1.3.0 (2026-04-18)
 
 Maintainability + honest claims release. Full notes:

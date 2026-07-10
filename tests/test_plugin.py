@@ -14,6 +14,7 @@ def test_plugin_json_parses_and_has_required_fields() -> None:
     for key in ("name", "version", "description"):
         assert key in data, f"plugin.json missing required key: {key}"
     assert data["name"] == "llm-wiki"
+    assert data["version"] == "1.4.0"
     for skill_path in data.get("skills", []):
         assert (REPO / skill_path / "SKILL.md").exists(), f"skill missing: {skill_path}/SKILL.md"
 
@@ -22,6 +23,8 @@ def test_marketplace_json_parses() -> None:
     data = json.loads((REPO / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
     assert data["name"] == "llm-wiki"
     assert data["plugins"][0]["name"] == "llm-wiki"
+    assert data["metadata"]["version"] == "1.4.0"
+    assert data["plugins"][0]["version"] == "1.4.0"
 
 
 def test_plugin_commands_have_frontmatter() -> None:

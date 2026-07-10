@@ -1,5 +1,5 @@
 from __future__ import annotations
-# llm-wiki-version: 1.3.0
+# llm-wiki-version: 1.4.0
 # runtime: dev-only (needs PROJECT_RAW_ROOT pointing at real raw files)
 #   Use --ci to skip raw-file resolution and only verify that source_hash is
 #   present in every non-session page. That sub-check is safe to run in CI.

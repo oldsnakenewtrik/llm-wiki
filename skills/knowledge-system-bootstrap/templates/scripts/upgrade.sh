@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# llm-wiki-version: 1.2.2
+# llm-wiki-version: 1.4.0
 # Upgrade LLM-wiki scripts to latest version.
 # Updates validation scripts and CI only. Never touches wiki content.
 set -euo pipefail
-REPO="https://github.com/Ss1024sS/LLM-wiki.git"
+REPO="https://github.com/oldsnakenewtrik/llm-wiki.git"
 TMP=$(mktemp -d)
 trap "rm -rf $TMP" EXIT
 echo "Fetching latest LLM-wiki..."

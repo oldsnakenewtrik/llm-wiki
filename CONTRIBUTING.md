@@ -3,8 +3,8 @@
 ## Quick Start
 
 ```bash
-git clone https://github.com/Ss1024sS/LLM-wiki.git
-cd LLM-wiki
+git clone https://github.com/oldsnakenewtrik/llm-wiki.git
+cd llm-wiki
 
 # Test your changes
 python3 scripts/bootstrap_knowledge_system.py /tmp/test-project "Test" --dry-run

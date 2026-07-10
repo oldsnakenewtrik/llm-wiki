@@ -1,4 +1,4 @@
 interface:
   display_name: "Knowledge System Bootstrap"
-  short_description: "Scaffold a compile-first wiki and raw workflow"
-  default_prompt: "Use $knowledge-system-bootstrap to scaffold a compile-first wiki, raw manifest, and memory-repo workflow for this project."
+  short_description: "Scaffold durable Markdown project memory"
+  default_prompt: "Use $knowledge-system-bootstrap to add a durable wiki, raw-source manifest, validation tools, and agent writeback rules to this project."

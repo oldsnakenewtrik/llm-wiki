@@ -10,9 +10,9 @@ The generated wiki content itself (markdown files) is not executable and general
 
 If you find a security issue, please **do not open a public issue**.
 
-Email: [open a private GitHub security advisory](https://github.com/Ss1024sS/LLM-wiki/security/advisories/new)
+Please [open a private GitHub security advisory](https://github.com/oldsnakenewtrik/llm-wiki/security/advisories/new).
 
-Or DM on GitHub: [@Ss1024sS](https://github.com/Ss1024sS)
+If advisories are unavailable, contact [@oldsnakenewtrik](https://github.com/oldsnakenewtrik) on GitHub without posting exploit details publicly.
 
 I will respond within 72 hours and work with you on a fix before public disclosure.
 

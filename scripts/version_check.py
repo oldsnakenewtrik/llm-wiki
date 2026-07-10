@@ -11,9 +11,14 @@ import sys
 import urllib.request
 from pathlib import Path
 
-GITHUB_API = "https://api.github.com/repos/Ss1024sS/LLM-wiki/releases/latest"
+GITHUB_API = "https://api.github.com/repos/oldsnakenewtrik/llm-wiki/releases/latest"
 VERSION_RE = re.compile(r"# llm-wiki-version:\s*(\S+)")
 SCRIPTS_DIR = Path(__file__).resolve().parent
+
+
+def parse_version(value: str) -> tuple[int, ...]:
+    parts = re.findall(r"\d+", value)
+    return tuple(int(part) for part in parts[:3]) if parts else (0,)
 
 
 def get_local_version() -> str:
@@ -50,7 +55,7 @@ def main() -> int:
         print(f"[llm-wiki] Could not detect local version. Latest is v{remote}")
         return 0
 
-    if remote and local != remote:
+    if parse_version(remote) > parse_version(local):
         print(f"[llm-wiki] Update available: v{local} -> v{remote}")
         print(f"[llm-wiki] Run: bash scripts/upgrade.sh")
         if release_url:

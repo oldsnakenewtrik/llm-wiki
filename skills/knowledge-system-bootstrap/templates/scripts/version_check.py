@@ -1,5 +1,5 @@
 from __future__ import annotations
-# llm-wiki-version: 1.3.0
+# llm-wiki-version: 1.4.0
 # runtime: dev-only (hits GitHub API)
 
 import json
@@ -8,7 +8,7 @@ import sys
 import urllib.request
 from pathlib import Path
 
-GITHUB_API = "https://api.github.com/repos/Ss1024sS/LLM-wiki/releases/latest"
+GITHUB_API = "https://api.github.com/repos/oldsnakenewtrik/llm-wiki/releases/latest"
 VERSION_RE = re.compile(r"# llm-wiki-version:\s*(\S+)")
 SCRIPTS_DIR = Path(__file__).resolve().parent
 

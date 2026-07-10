@@ -8,6 +8,8 @@ from pathlib import Path
 
 from .conftest import BOOTSTRAP, run
 
+REPO = Path(__file__).resolve().parents[1]
+
 
 def test_bootstrap_creates_expected_files(project: Path) -> None:
     expected = [
@@ -44,6 +46,7 @@ def test_bootstrap_creates_expected_files(project: Path) -> None:
     ]
     for rel in expected:
         assert (project / rel).exists(), f"missing: {rel}"
+    assert sum(path.is_file() for path in project.rglob("*")) == 33
 
 
 def test_no_unresolved_sentinels(project: Path) -> None:
@@ -230,6 +233,7 @@ def test_wiki_size_report_runs_on_fresh_bootstrap(project: Path) -> None:
     assert result.returncode == 0, result.stdout
     assert "GREEN" in result.stdout
     assert "estimated tokens" in result.stdout
+    assert "Read the whole wiki every session" not in result.stdout
 
 
 def test_wiki_size_report_json_output(project: Path) -> None:
@@ -320,6 +324,14 @@ def test_dry_run_writes_nothing(tmp_path: Path) -> None:
     assert not target.exists()
 
 
+def test_wrapper_preserves_arguments_with_spaces(tmp_path: Path) -> None:
+    target = tmp_path / "project with spaces"
+    result = run([sys.executable, str(BOOTSTRAP), str(target), "Name With Spaces"])
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert (target / "AGENTS.md").exists()
+    assert "Name With Spaces" in (target / "AGENTS.md").read_text(encoding="utf-8")
+
+
 def test_force_creates_bak(project: Path) -> None:
     (project / "CLAUDE.md").write_text("# manual edit\n", encoding="utf-8")
     result = run([
@@ -363,3 +375,33 @@ def test_no_force_skips_existing(project: Path) -> None:
     assert result.returncode == 0
     assert (project / "CLAUDE.md").read_text(encoding="utf-8") == "# manual edit\n"
     assert "Skipped" in result.stdout
+
+
+def test_upgrade_prints_templates_on_legacy_windows_encoding(project: Path) -> None:
+    import os
+
+    wiki_check = project / "scripts" / "wiki_check.py"
+    wiki_check.write_text(
+        wiki_check.read_text(encoding="utf-8").replace("1.4.0", "1.3.0"),
+        encoding="utf-8",
+    )
+    size_report = project / "scripts" / "wiki_size_report.py"
+    size_report.write_text(
+        size_report.read_text(encoding="utf-8")
+        .replace("1.4.0", "1.3.0")
+        .replace(
+            "Direct Markdown reads remain practical. Start with index + status + log, then open relevant pages.",
+            "Read the whole wiki every session — no concern.",
+        ),
+        encoding="utf-8",
+    )
+    env = os.environ.copy()
+    env["LLM_WIKI_REPO_URL"] = str(REPO)
+    env["PYTHONIOENCODING"] = "cp1252"
+    result = run(
+        [sys.executable, str(REPO / "scripts" / "upgrade_knowledge_system.py"), str(project)],
+        env=env,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "Upgrade complete: 1.3.0 -> 1.4.0" in result.stdout
+    assert "Read the whole wiki every session" not in size_report.read_text(encoding="utf-8")
