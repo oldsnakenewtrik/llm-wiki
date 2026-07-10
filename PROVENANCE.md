@@ -35,3 +35,7 @@ They remain unchanged where doing so is important to the historical record.
 The original MIT license explicitly permits use, modification, publication, distribution, and
 sublicensing, provided its copyright and permission notices remain included. See
 [LICENSE](./LICENSE).
+
+Continuation modifications are Copyright (c) 2026 Dave de Vries and are distributed under the
+same MIT license. The canonical license text is intentionally kept unchanged so automated license
+detectors identify the repository correctly.
